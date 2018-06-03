@@ -40,7 +40,7 @@ class ArticlesController extends Controller
 
     public function views(Request $request)
     {
-        $this->article->whereId($request->id)->increment('views', 1, ['true_views'=> \DB::raw('true_views  + 1')]);
+        $this->article->whereId($request->id)->increment('views', 1, ['true_views' => \DB::raw('true_views  + 1')]);
 
         return response([
             'code' => 0,
@@ -55,6 +55,7 @@ class ArticlesController extends Controller
             $article = $this->article->create([
                 'title'     => $articleRequest->title,
                 'subtitle'  => $articleRequest->subtitle,
+                'phone'     => $articleRequest->phone,
                 'up_body'   => $articleRequest->up_body,
                 'down_body' => $articleRequest->down_body,
                 'views'     => $articleRequest->views,
@@ -93,6 +94,7 @@ class ArticlesController extends Controller
                 ->update([
                     'title'     => $articleRequest->title,
                     'subtitle'  => $articleRequest->subtitle,
+                    'phone'     => $articleRequest->phone,
                     'up_body'   => $articleRequest->up_body,
                     'down_body' => $articleRequest->down_body,
                     'views'     => $articleRequest->views,
@@ -154,8 +156,8 @@ class ArticlesController extends Controller
         $result = Storage::disk('upyun')->put('/', $request->file('file'));
 
         return response()->json([
-            'code' => 0,
-            'image_url'  => $result
+            'code'      => 0,
+            'image_url' => $result
         ]);
     }
 }
