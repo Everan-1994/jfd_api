@@ -115,8 +115,8 @@ class UsersController extends Controller
         })->select(\DB::raw('COUNT(id) as count'), \DB::raw('SUM(true_views) as true_views'), \DB::raw('SUM(true_asks) as true_asks'))
             ->get()->toArray();
         $data['articles'] = $articles[0]->count;
-        $data['true_views'] = $articles[0]->true_views;
-        $data['true_asks'] = $articles[0]->true_asks;
+        $data['true_views'] = $articles[0]->true_views ?: 0;
+        $data['true_asks'] = $articles[0]->true_asks ?: 0;
 
         return response()->json([
             'code'  => 0,
