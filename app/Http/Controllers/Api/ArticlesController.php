@@ -53,15 +53,17 @@ class ArticlesController extends Controller
         \DB::beginTransaction();
         try {
             $article = $this->article->create([
-                'title'     => $articleRequest->title,
-                'subtitle'  => $articleRequest->subtitle,
-                'phone'     => $articleRequest->phone,
-                'up_body'   => $articleRequest->up_body,
-                'down_body' => $articleRequest->down_body,
-                'views'     => $articleRequest->views,
-                'asks'      => $articleRequest->asks,
-                'author_id' => \Auth::id(),
-                'status'    => $articleRequest->status
+                'title'       => $articleRequest->title,
+                'description' => $articleRequest->description,
+                'keywords'    => $articleRequest->keywords,
+                'subtitle'    => $articleRequest->subtitle,
+                'phone'       => $articleRequest->phone,
+                'up_body'     => $articleRequest->up_body,
+                'down_body'   => $articleRequest->down_body,
+                'views'       => $articleRequest->views,
+                'asks'        => $articleRequest->asks,
+                'author_id'   => \Auth::id(),
+                'status'      => $articleRequest->status
             ]);
 
             $tag = explode('&', $articleRequest->tags);
@@ -92,14 +94,16 @@ class ArticlesController extends Controller
         try {
             $this->article->whereId($articleRequest->id)
                 ->update([
-                    'title'     => $articleRequest->title,
-                    'subtitle'  => $articleRequest->subtitle,
-                    'phone'     => $articleRequest->phone,
-                    'up_body'   => $articleRequest->up_body,
-                    'down_body' => $articleRequest->down_body,
-                    'views'     => $articleRequest->views,
-                    'asks'      => $articleRequest->asks,
-                    'status'    => $articleRequest->status
+                    'title'       => $articleRequest->title,
+                    'description' => $articleRequest->description,
+                    'keywords'    => $articleRequest->keywords,
+                    'subtitle'    => $articleRequest->subtitle,
+                    'phone'       => $articleRequest->phone,
+                    'up_body'     => $articleRequest->up_body,
+                    'down_body'   => $articleRequest->down_body,
+                    'views'       => $articleRequest->views,
+                    'asks'        => $articleRequest->asks,
+                    'status'      => $articleRequest->status
                 ]);
 
             // 先删除原有标签
