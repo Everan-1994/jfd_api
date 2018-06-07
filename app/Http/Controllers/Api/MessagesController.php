@@ -52,8 +52,8 @@ class MessagesController extends Controller
         $this->message->create([
             'name'       => $request->name,
             'phone'      => $request->phone,
-            'article_id' => $request->article_id,
             'share_id'   => $request->share_id,
+            'article_id' => $request->article_id,
             'ip'         => $ip,
             'home_type'  => implode(',', $request->type)
         ]);
