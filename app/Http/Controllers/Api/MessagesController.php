@@ -22,8 +22,8 @@ class MessagesController extends Controller
         $identify = $user['identify'];
 
         $message = $this->message->when(($identify == 3 || isset($request->share_id)), function ($query) use ($id) {
-                return $query->whereShareId($id);
-            })
+            return $query->whereShareId($id);
+        })
             ->when(isset($request->status), function ($query) use ($request) {
                 return $query->whereStatus($request->status);
             })
@@ -38,8 +38,9 @@ class MessagesController extends Controller
         $ip = $request->getClientIp();
 
         $exists = $this->message->where([
-            'ip' => $ip,
-            'article_id' => $request->article_id
+            'ip'         => $ip,
+            'article_id' => $request->article_id,
+            'status'     => 0
         ])->exists();
 
         if ($exists) {
@@ -52,7 +53,7 @@ class MessagesController extends Controller
             'name'       => $request->name,
             'phone'      => $request->phone,
             'article_id' => $request->article_id,
-            'author_id'  => $request->author_id,
+            'share_id'   => $request->share_id,
             'ip'         => $ip,
             'home_type'  => implode(',', $request->type)
         ]);
@@ -65,7 +66,7 @@ class MessagesController extends Controller
     public function changeStatus(Request $request)
     {
         $this->message->whereId($request->id)->update([
-            'status' => $request->status,
+            'status'     => $request->status,
             'updated_at' => now()->toDateTimeString()
         ]);
 
