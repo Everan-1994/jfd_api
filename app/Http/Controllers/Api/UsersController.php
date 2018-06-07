@@ -102,7 +102,6 @@ class UsersController extends Controller
     public function total()
     {
         $user = \Auth::user();
-        $id = $user->id;
         $identify = $user->identify;
 
         if ($identify < 3) {
@@ -110,10 +109,12 @@ class UsersController extends Controller
         }
 
         // 文章总数 && 留言总数 && 阅读总数
-        $articles = \DB::table('articles')->when($identify == 3, function ($query) use ($id) {
-            return $query->whereAuthorId($id);
-        })->select(\DB::raw('COUNT(id) as count'), \DB::raw('SUM(true_views) as true_views'), \DB::raw('SUM(true_asks) as true_asks'))
-            ->get()->toArray();
+        $articles = \DB::table('articles')->select(
+            \DB::raw('COUNT(id) as count'),
+            \DB::raw('SUM(true_views) as true_views'),
+            \DB::raw('SUM(true_asks) as true_asks')
+        )->get()->toArray();
+
         $data['articles'] = $articles[0]->count;
         $data['true_views'] = $articles[0]->true_views ?: 0;
         $data['true_asks'] = $articles[0]->true_asks ?: 0;
