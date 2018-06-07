@@ -16,7 +16,7 @@ class CreateMessagesTable extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('article_id')->comment('文章id');
-            $table->unsignedInteger('author_id')->comment('作者id');
+            $table->unsignedInteger('share_id')->comment('分享者id');
             $table->string('name')->comment('用户名称');
             $table->string('phone')->comment('用户联系方式');
             $table->string('home_type')->comment('户型');

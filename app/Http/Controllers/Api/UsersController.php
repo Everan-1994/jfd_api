@@ -123,4 +123,17 @@ class UsersController extends Controller
             'data' => $data
         ]);
     }
+
+    // 修改密码
+    public function changePwd(Request $request, User $user)
+    {
+        $this->authorize('changePwd', $user);
+        $user->password = bcrypt($request->new_pwd);
+        $user->save();
+
+        return response([
+            'code' => 0,
+            'msg' => 'Success'
+        ]);
+    }
 }

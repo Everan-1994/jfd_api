@@ -150,6 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
+        JellyBool\Flysystem\Upyun\UpyunServiceProvider::class,
 
         /*
          * Application Service Providers...

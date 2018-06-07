@@ -17,7 +17,13 @@ class MessagesController extends Controller
 
     public function index(Request $request)
     {
-        $message = $this->message->whereAuthorId(\Auth::id())
+        $user = \Auth::user();
+        $id = $user['id'];
+        $identify = $user['identify'];
+
+        $message = $this->message->when(($identify == 3 || isset($request->share_id)), function ($query) use ($id) {
+                return $query->whereShareId($id);
+            })
             ->when(isset($request->status), function ($query) use ($request) {
                 return $query->whereStatus($request->status);
             })

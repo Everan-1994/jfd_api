@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Images;
 use App\Models\Tag;
 use App\Models\Article;
 use Illuminate\Http\Request;
@@ -20,10 +21,9 @@ class ArticlesController extends Controller
 
     public function index(Request $request)
     {
-        $article = $this->article->whereAuthorId(\Auth::id())
-            ->when(isset($request->status), function ($query) use ($request) {
-                return $query->whereStatus($request->status);
-            })
+        $article = $this->article->when(isset($request->status), function ($query) use ($request) {
+            return $query->whereStatus($request->status);
+        })
             ->when(isset($request->title), function ($query) use ($request) {
                 return $query->where('title', 'like', '%' . $request->title . '%');
             })
@@ -54,8 +54,6 @@ class ArticlesController extends Controller
         try {
             $article = $this->article->create([
                 'title'       => $articleRequest->title,
-                'description' => $articleRequest->description,
-                'keywords'    => $articleRequest->keywords,
                 'subtitle'    => $articleRequest->subtitle,
                 'phone'       => $articleRequest->phone,
                 'up_body'     => $articleRequest->up_body,
@@ -79,6 +77,12 @@ class ArticlesController extends Controller
 
             $tags->insert($data);
 
+            // 文章图片入库
+            if ($articleRequest->images) {
+                // 图片本地保存
+                $this->add_images($articleRequest->images, $article['id']);
+            }
+
             \DB::commit();
         } catch (\Exception $exception) {
             \DB::rollBack();
@@ -95,8 +99,6 @@ class ArticlesController extends Controller
             $this->article->whereId($articleRequest->id)
                 ->update([
                     'title'       => $articleRequest->title,
-                    'description' => $articleRequest->description,
-                    'keywords'    => $articleRequest->keywords,
                     'subtitle'    => $articleRequest->subtitle,
                     'phone'       => $articleRequest->phone,
                     'up_body'     => $articleRequest->up_body,
@@ -121,6 +123,11 @@ class ArticlesController extends Controller
             }
 
             $tags->insert($data);
+
+            if ($articleRequest->images) {
+                // 图片本地保存
+                $this->add_images($articleRequest->images, $articleRequest->id);
+            }
 
             \DB::commit();
 
@@ -155,13 +162,36 @@ class ArticlesController extends Controller
         ]);
     }
 
+    // 上传图片到又拍云
     public function upload(Request $request)
     {
-        $result = Storage::disk('upyun')->put('/', $request->file('file'));
+        return Storage::disk('upyun')->put('/', $request->file('image'));
+    }
 
-        return response()->json([
-            'code'      => 0,
-            'image_url' => $result
-        ]);
+    // 图片路径保存
+    public function add_images($paths, $article_id)
+    {
+        $data = [];
+        foreach ($paths as $k => $val) {
+            $data[$k] = [
+                'article_id' => $article_id,
+                'image_name' => $val,
+                'created_at' => now()->toDateTimeString(),
+                'updated_at' => now()->toDateTimeString()
+            ];
+        }
+
+        return Images::insert($data);
+    }
+
+    // 删除又拍云上的图片
+    public function del_images($paths)
+    {
+        $drive = Storage::disk('upyun');
+
+        foreach ($paths as $k => $path) {
+            $drive->delete($path);
+        }
+
     }
 }

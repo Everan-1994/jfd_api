@@ -20,8 +20,6 @@ class ArticleRequest extends FormRequest
     {
         return [
             'title'       => 'required',
-            'description' => 'required',
-            'keywords'    => 'required',
             'subtitle'    => 'required',
             'tags'        => 'required',
             'up_body'     => 'required',
@@ -35,8 +33,6 @@ class ArticleRequest extends FormRequest
     {
         return [
             'title.required'       => '标题不能为空',
-            'description.required' => '简介不能为空',
-            'keywords.required'    => '关键字不能为空',
             'subtitle.required'    => '副标题不能为空',
             'tags.required'        => '标签不能为空',
             'up_body.required'     => '上半区内容不能为空',

@@ -52,6 +52,10 @@ $api->group([
             // 删除用户
             $api->delete('user/{user}', 'UsersController@del')
                 ->name('api.user.del');
+            // 修改密码
+            $api->patch('user/{user}/changePwd', 'UsersController@changePwd')
+                ->name('api.user.changePwd');
+
             // 用户总数
             $api->get('total', 'UsersController@total')
                 ->name('api.user.total');
@@ -74,7 +78,7 @@ $api->group([
             // 文章阅读数
             $api->patch('article/views', 'ArticlesController@views')
                 ->name('api.article.views');
-            // 文章阅读数
+            // 文章图片
             $api->post('article/image', 'ArticlesController@upload')
                 ->name('api.article.upload');
 

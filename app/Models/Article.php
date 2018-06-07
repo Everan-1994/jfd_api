@@ -10,8 +10,7 @@ class Article extends Model
         'title', 'subtitle', 'up_body',
         'down_body', 'views', 'true_views',
         'asks', 'true_asks', 'status',
-        'author_id', 'phone', 'keywords',
-        'description'
+        'author_id', 'phone'
     ];
 
     public function tags()

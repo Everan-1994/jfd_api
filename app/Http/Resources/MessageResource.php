@@ -23,7 +23,8 @@ class MessageResource extends JsonResource
             'remake'     => $this->remake,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
-            'title'      => $this->article->title
+            'title'      => $this->article->title,
+            'username'   => $this->users->name
         ];
     }
 }
