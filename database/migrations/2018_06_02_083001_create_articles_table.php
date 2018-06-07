@@ -16,8 +16,6 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('description');
-            $table->string('keywords');
             $table->string('subtitle')->comment('副标题');
             $table->text('up_body')->comment('上半区内容');
             $table->text('down_body')->comment('下半区内容');
