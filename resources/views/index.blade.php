@@ -196,7 +196,7 @@
                         _this.showPage = true;
                     }
                     _this.articleList.forEach((v, i) => {
-                        _this.articleList[i].time = moment(v.created_at).startOf('hour').fromNow();
+                        _this.articleList[i].time = moment(v.created_at, format='YYYYMMDD H:mm:ss').fromNow();
                     });
                 }).catch(error => {
                     if (error.response.status == 401) {
@@ -232,8 +232,8 @@
                         _this.showMPage = true;
                     }
                     _this.messageList.forEach((v, i) => {
-                        _this.messageList[i].ltime = moment(v.created_at).startOf('hour').fromNow();
-                        _this.messageList[i].htime = moment(v.updated_at).startOf('hour').fromNow();
+                        _this.messageList[i].ltime = moment(v.created_at, format='YYYYMMDD H:mm:ss').fromNow();
+                        _this.messageList[i].htime = moment(v.updated_at, format='YYYYMMDD H:mm:ss').fromNow();
                     });
                 }).catch(error => {
                     if (error.response.status == 401) {
