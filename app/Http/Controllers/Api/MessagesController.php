@@ -78,7 +78,14 @@ class MessagesController extends Controller
 
     public function remake(Request $request)
     {
-        $this->message->whereId($request->id)->update(['remake' => $request->remake]);
+        $data = [
+            'remake' => $request->remake
+        ];
+        if ($request->status) {
+            $data['status'] = $request->status;
+            $data['updated_at'] = now()->toDateTimeString();
+        }
+        $this->message->whereId($request->id)->update($data);
 
         return response([
             'code' => 0,
