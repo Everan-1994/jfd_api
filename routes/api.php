@@ -25,6 +25,9 @@ $api->group([
         // 文章详情
         $api->get('article/{article}', 'ArticlesController@show')
             ->name('api.article.show');
+        // 文章阅读数
+        $api->patch('article/views', 'ArticlesController@views')
+            ->name('api.article.views');
         // 留言
         $api->post('message', 'MessagesController@store')
             ->name('api.message.store');
@@ -75,9 +78,6 @@ $api->group([
             // 删除文章
             $api->delete('article/{article}', 'ArticlesController@del')
                 ->name('api.article.del');
-            // 文章阅读数
-            $api->patch('article/views', 'ArticlesController@views')
-                ->name('api.article.views');
             // 文章图片
             $api->post('article/image', 'ArticlesController@upload')
                 ->name('api.article.upload');
