@@ -80,6 +80,7 @@
                             layer.alert('非授权用户！', {icon: 0, title: '温馨提示'})
                         }
                     }).catch(error => {
+                        layer.msg(error.response.data.error || '登陆失败', {icon: 5});
                         console.log(error);
                     });
 
