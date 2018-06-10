@@ -93,4 +93,14 @@ class MessagesController extends Controller
             'msg'  => '备注成功'
         ]);
     }
+
+    public function del(Message $message)
+    {
+        $message->delete();
+
+        return response([
+            'code' => 0,
+            'msg'  => '删除成功'
+        ]);
+    }
 }

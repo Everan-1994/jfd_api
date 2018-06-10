@@ -91,6 +91,9 @@ $api->group([
             // 标记备注
             $api->patch('message/remake', 'MessagesController@remake')
                 ->name('api.message.remake');
+            // 删除留言
+            $api->delete('message/{message}', 'MessagesController@del')
+                ->name('api.message.del');
         });
 
     });
