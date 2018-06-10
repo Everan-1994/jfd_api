@@ -40,7 +40,8 @@ class MessagesController extends Controller
         $exists = $this->message->where([
             'ip'         => $ip,
             'article_id' => $request->article_id,
-            'status'     => 0
+            'status'     => 0,
+            'share_id'   => $request->share_id
         ])->exists();
 
         if ($exists) {
