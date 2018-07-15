@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\HouseType;
 use App\Models\Images;
 use App\Models\Tag;
 use App\Models\Article;
@@ -48,7 +49,7 @@ class ArticlesController extends Controller
         ]);
     }
 
-    public function store(ArticleRequest $articleRequest, Tag $tags)
+    public function store(ArticleRequest $articleRequest, Tag $tags, HouseType $houseType)
     {
         \DB::beginTransaction();
         try {
@@ -64,6 +65,7 @@ class ArticlesController extends Controller
                 'status'      => $articleRequest->status
             ]);
 
+            // 标签
             $tag = explode('&', $articleRequest->tags);
             $data = [];
             foreach ($tag as $k => $val) {
@@ -74,8 +76,20 @@ class ArticlesController extends Controller
                     'updated_at' => now()->toDateTimeString()
                 ];
             }
-
             $tags->insert($data);
+
+            // 户型
+            $house_type = explode('&', $articleRequest->house_type);
+            $ht = [];
+            foreach ($house_type as $key => $value) {
+                $ht[$key] = [
+                    'article_id' => $article['id'],
+                    'name'       => $value,
+                    'created_at' => now()->toDateTimeString(),
+                    'updated_at' => now()->toDateTimeString()
+                ];
+            }
+            $houseType->insert($ht);
 
             // 文章图片入库
             if ($articleRequest->images) {
@@ -92,7 +106,7 @@ class ArticlesController extends Controller
         return new ArticleResource($article);
     }
 
-    public function update(ArticleRequest $articleRequest, Tag $tags)
+    public function update(ArticleRequest $articleRequest, Tag $tags, HouseType $houseType)
     {
         \DB::beginTransaction();
         try {
@@ -123,6 +137,21 @@ class ArticlesController extends Controller
             }
 
             $tags->insert($data);
+
+            // 先删除原有户型
+            $houseType->whereArticleId($articleRequest->id)->delete();
+
+            $house_type = explode('&', $articleRequest->house_type);
+            $ht = [];
+            foreach ($house_type as $key => $value) {
+                $ht[$key] = [
+                    'article_id' => $articleRequest->id,
+                    'name'       => $value,
+                    'created_at' => now()->toDateTimeString(),
+                    'updated_at' => now()->toDateTimeString()
+                ];
+            }
+            $houseType->insert($ht);
 
             if ($articleRequest->images) {
                 // 图片本地保存

@@ -17,4 +17,9 @@ class Article extends Model
     {
         return $this->hasMany(Tag::class, 'article_id', 'id');
     }
+
+    public function house_type()
+    {
+        return $this->hasMany(HouseType::class, 'article_id', 'id');
+    }
 }
