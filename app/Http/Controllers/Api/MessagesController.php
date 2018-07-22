@@ -103,4 +103,88 @@ class MessagesController extends Controller
             'msg'  => '删除成功'
         ]);
     }
+    
+    /**
+     * 最近七天内的留言
+     */
+    public function getWeekMessage()
+    {
+        $list = \DB::select("
+                    select
+                      DATE_FORMAT(a.created_at, '%m-%d') as days,
+                      ifnull(b.count,0) as count
+                    from (
+                           SELECT date_sub(curdate(), interval 1 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 2 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 3 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 4 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 5 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 6 day) as created_at
+                           union all
+                           SELECT date_sub(curdate(), interval 7 day) as created_at
+                         ) a left join (
+                                         select date(created_at) as datetime, count(*) as count
+                                         from messages
+                                         group by date(created_at)
+                                       ) b on a.created_at = b.datetime
+                                       order by days desc
+                ");
+
+        return response($list);
+    }
+
+    /**
+     * 每月申报量
+     */
+    public function getMonthMessage(Message $message)
+    {
+        $list = $message->select(\DB::raw("DATE_FORMAT(created_at,'%Y-%m') as times, COUNT(*) as count"))
+            ->groupBy('times')
+            ->get()
+            ->toArray();
+
+        if ($list) {
+            // 构造12个月 YYYY-MM
+            for ($i = 0; $i <= 11; $i++) {
+                $month = now()->modify('-' . $i . ' months')->toDateString();
+                $ms[$i] = substr($month, 0, 7); // YYYY-MM
+            }
+
+            $ms = array_reverse($ms); // 倒序排列
+
+            foreach ($ms as $c => $w) {
+                foreach ($list as $k => $v) {
+                    if (hash_equals($w, $v['times'])) {
+                        $data[$c][$k] = $v;
+                    } else {
+                        $data[$c][$k] = [
+                            'times' => $w,
+                            'count' => 0
+                        ];
+                    }
+                }
+            }
+
+            foreach ($data as $k => $v) {
+                $sum[$k] = [];
+                foreach ($v as $c => $w) {
+                    array_push($sum[$k], $w['count']);
+                }
+
+                $date[$k] = [
+                    'day'   => $v[0]['times'],
+                    'count' => array_sum($sum[$k])
+                ];
+            }
+        } else {
+            $date = [];
+        }
+
+        return response($date);
+    }
 }

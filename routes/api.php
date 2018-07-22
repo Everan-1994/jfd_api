@@ -94,6 +94,13 @@ $api->group([
             // 删除留言
             $api->delete('message/{message}', 'MessagesController@del')
                 ->name('api.message.del');
+
+            // 最近七天内留言
+            $api->get('week/messages', 'MessagesController@getWeekMessage')
+                ->name('api.message.getWeekMessage');
+            // 12个月内的留言
+            $api->get('month/messages', 'MessagesController@getMonthMessage')
+                ->name('api.message.getMonthMessage');
         });
 
     });
