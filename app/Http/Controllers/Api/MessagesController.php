@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Http\Resources\MessageResource;
@@ -150,13 +151,14 @@ class MessagesController extends Controller
 
         if ($list) {
             // 构造12个月 YYYY-MM
+            $now = substr(now()->toDateString(), 0, 7) . '-01';
             for ($i = 0; $i <= 11; $i++) {
-                $month = now()->modify('-' . $i . ' months')->toDateString();
+                $month = Carbon::parse($now)->modify('-' . $i . ' months')->toDateString();
                 $ms[$i] = substr($month, 0, 7); // YYYY-MM
             }
 
             $ms = array_reverse($ms); // 倒序排列
-
+            
             foreach ($ms as $c => $w) {
                 foreach ($list as $k => $v) {
                     if (hash_equals($w, $v['times'])) {
