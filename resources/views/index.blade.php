@@ -299,10 +299,11 @@
                 this.qrcodes = true;
                 let share_id = getUserId();
                 let phone = getUserPhone();
+                let name = getUser();
                 $('#qrcode').qrcode({
                     width: 170,
                     height: 170,
-                    text: `https://jfd.lzdu.com/#/preview?id=${id}&share_id=${share_id}&phone=${phone}`
+                    text: `https://jfd.lzdu.com/#/preview?id=${id}&share_id=${share_id}&phone=${phone}&name=${name}`
                 });
                 layer.open({
                     type: 1,
