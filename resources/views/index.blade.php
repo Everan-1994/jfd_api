@@ -299,7 +299,7 @@
                 this.qrcodes = true;
                 let share_id = getUserId();
                 let phone = getUserPhone();
-                let name = getUser();
+                let name = encodeURI(getUser());
                 $('#qrcode').qrcode({
                     width: 170,
                     height: 170,
