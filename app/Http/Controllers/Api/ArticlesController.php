@@ -22,9 +22,13 @@ class ArticlesController extends Controller
 
     public function index(Request $request)
     {
+        $identify = \Auth::user()->identify;
         $article = $this->article->when(isset($request->status), function ($query) use ($request) {
             return $query->whereStatus($request->status);
         })
+            ->when($identify === 3, function ($query) {
+                return $query->where('status', 1);
+            })
             ->when(isset($request->title), function ($query) use ($request) {
                 return $query->where('title', 'like', '%' . $request->title . '%');
             })
